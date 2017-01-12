@@ -4,10 +4,14 @@ const {DataTypes} = Sequelize;
 'use strict';
 module.exports = function(sequelize) {
   var Grade = sequelize.define('Grade', {
-    grade: DataTypes.STRING,
+    grade: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     inspectionDate: {
       type: DataTypes.DATE,
-      field: 'inspection_date'
+      field: 'inspection_date',
+      allowNull: false,
     },
     score: DataTypes.INTEGER
   }, {

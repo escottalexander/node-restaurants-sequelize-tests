@@ -278,4 +278,27 @@ describe('Restaurants API resource', function() {
     });
   });
 
+  describe('GET grades for a restaurant endpoint', function() {
+
+    it('should return all grades for a restaurant', function() {
+      // strategy:
+      //    1. get id of a restaurant
+      //    2. get back its grades from api
+      //    3. prove count and ids correct
+      let restaurant;
+
+      return Restaurant
+        .findOne({include: [{model: Grade, as: 'grades'}]})
+        .then(_restaurant => {
+          restaurant = _restaurant;
+          return chai.request(app)
+            .get(`/restaurants/${restaurant.id}/grades`);
+        })
+        .then(function(res) {
+          // res.should.have.status(200);
+          res.body.grades.length.should.equal(restaurant.grades.length);
+          restaurant.grades.map(grade => grade.id).should.deep.equal(res.body.grades.map(grade => grade.id))
+        });
+    });
+  });
 });

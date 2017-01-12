@@ -6,7 +6,8 @@ const faker = require('faker');
 // this module
 const should = chai.should();
 
-const {app, runServer, closeServer} = require('../server');
+const app = require('../app');
+const {runServer, closeServer} = require('../server');
 const {PORT} = require('../config');
 const {Restaurant, Grade, sequelize} = require('../models');
 

@@ -4,21 +4,21 @@ const router = express.Router();
 const {Restaurant, Grade} = require('../models');
 
 
-router.get('/grades/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   Grade
   .findById(req.params.id)
   .then(grade => res.json(grade.apiRepr()));
 });
 
-router.post('/grades', (req, res) => {
+router.post('/', (req, res) => {
 
 });
 
-router.put('/grades', (req, res) => {
+router.put('/', (req, res) => {
 
 });
 
-router.delete('/grades/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
 
 });
 

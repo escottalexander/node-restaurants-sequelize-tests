@@ -6,15 +6,12 @@ const faker = require('faker');
 // this module
 const should = chai.should();
 
-const app = require('../app');
-const {runServer, closeServer} = require('../server');
-const {PORT} = require('../config');
-const {Restaurant, Grade, sequelize} = require('../models');
+const app = require('../app')
+const {Restaurant, Grade} = require('../models');
 
 chai.use(chaiHttp);
 
 function seedRestaurantData(seedNum=10) {
-  console.info('seeding blog post data');
   const restaurants = [];
   for (let i=1; i<=seedNum; i++) {
     restaurants.push(generateRestaurantData());
@@ -79,13 +76,6 @@ function generateRestaurantData() {
 
 describe('Restaurants API resource', function() {
 
-  // drop and recreate tables from scratch at very beginning
-  before(function() {
-    return sequelize
-      .sync({force: true})
-      .then(() => runServer(PORT));
-  });
-
   // to make tests quicker, only drop all rows from each
   // table in between tests, instead of recreating tables
   beforeEach(function() {
@@ -94,9 +84,6 @@ describe('Restaurants API resource', function() {
       .then(() => seedRestaurantData());
   });
 
-  after(function() {
-    return closeServer();
-  });
 
   describe('GET endpoint', function() {
 

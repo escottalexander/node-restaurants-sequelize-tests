@@ -1,6 +1,6 @@
 const {PORT} = require('../config');
 const {runServer, closeServer} = require('../server');
-const {sequelize} = require('../models');
+const {sequelize} = require('../db/sequelize');
 
 before(function() {
   return sequelize

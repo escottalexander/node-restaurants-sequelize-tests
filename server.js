@@ -43,4 +43,4 @@ if (require.main === module) {
     });
 };
 
-module.exports = {runServer, closeServer, app};
+module.exports = {runServer, closeServer};

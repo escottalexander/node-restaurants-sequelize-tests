@@ -8,4 +8,3 @@ const sequelize = new Sequelize(DATABASE_URL, SEQUELIZE_OPTIONS);
 module.exports = {
     sequelize
 };
-

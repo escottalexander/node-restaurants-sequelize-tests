@@ -1,3 +1,10 @@
+-- this is the initial migration for our app.
+-- it sets up restaurants and grades tables.
+
+-- everything between `BEGIN;` and `COMMIT;` at the
+-- end succeeds or fails together. for instance
+-- if the table creation for `grades` fails,
+-- the table for restaurants won't be created.
 BEGIN;
 
 CREATE TYPE boroughs AS ENUM (

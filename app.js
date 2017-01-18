@@ -1,3 +1,8 @@
+// we've separated out our app and server. `app`
+// is responsible for coodrinating routes and middleware.
+// server is responsible for serving the app defined
+// in this file.
+
 const bodyParser = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');

@@ -11,7 +11,8 @@ const {Grade, Restaurant} = require('../models');
 
 chai.use(chaiHttp);
 
-function generateGradeData(includeDates=false) {
+// used to generate grade data in tests
+function generateGradeData(includeDates=false, restaurantId=null) {
   const grades = ['A', 'B', 'C', 'D', 'F'];
   const grade = grades[Math.floor(Math.random() * grades.length)];
   const result = {
@@ -23,19 +24,31 @@ function generateGradeData(includeDates=false) {
     result.createdAt = date;
     result.updatedAt = date;
   }
+  if (restaurantId) {
+    result.restaurant_id = restaurantId;
+  }
   return result
 }
 
+// first create a new restaurant, then create `seedNum` number
+// of grades that get their `restaurant_id` property set to
+// the id of our new restaurant. `grades.restaurant_id` cannot
+// be null, so we need to have a restaurant before we can create
+// grades
 function seedData(seedNum=1) {
-  const promises = [];
-  for (let i=1; i<=seedNum; i++) {
-    promises.push(Grade.create(generateGradeData(true)));
-  }
-  promises.push(seedRestaurantData());
-  return Promise.all(promises);
+  // `seedRestaurantData` returns a promise
+  return seedRestaurantData()
+    .then(restaurant => {
+      const promises = [];
+      for (let i=1; i<=seedNum; i++) {
+        console.log(restaurant.id)
+        promises.push(Grade.create(generateGradeData(true, restaurant.id)));
+      }
+      return Promise.all(promises);
+    });
 }
 
-
+// create and save a new restuarant
 function seedRestaurantData() {
   const date = faker.date.recent();
   return Restaurant.create({
@@ -51,12 +64,13 @@ function seedRestaurantData() {
 
 describe('Grades API resource', function() {
 
-
   // to make tests quicker, only drop all rows from each
   // table in between tests, instead of recreating tables
   beforeEach(function() {
     return Grade
+      // .truncate drops all rows in this table
       .truncate({cascade: true})
+      // then create new seed data
       .then(() => seedData());
   });
 
@@ -122,10 +136,10 @@ describe('Grades API resource', function() {
   describe('PUT endpoint', function() {
 
     // strategy:
-    //  1. Get an existing restaurant from db
-    //  2. Make a PUT request to update that restaurant
-    //  3. Prove restaurant returned by request contains data we sent
-    //  4. Prove restaurant in db is correctly updated
+    //  1. Get an existing grade from db
+    //  2. Make a PUT request to update that grade
+    //  3. Prove grade returned by request contains data we sent
+    //  4. Prove grade in db is correctly updated
     it('should update fields you send over', function() {
       const updateData = {
         grade: 'Q',

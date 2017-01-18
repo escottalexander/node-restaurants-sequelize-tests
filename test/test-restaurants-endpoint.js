@@ -50,9 +50,7 @@ function generateGrades(num) {
   return grades;
 }
 
-// generate an object represnting a restaurant.
-// can be used to generate seed data for db
-// or request.body data
+// create a new restaurant with three grades
 function generateRestaurantData() {
   const date = faker.date.recent();
   return Restaurant.create({
@@ -80,7 +78,9 @@ describe('Restaurants API resource', function() {
   // table in between tests, instead of recreating tables
   beforeEach(function() {
     return Restaurant
+      // .truncate drops all rows in this table
       .truncate({cascade: true})
+      // then seed db with new test data
       .then(() => seedRestaurantData());
   });
 
@@ -113,7 +113,7 @@ describe('Restaurants API resource', function() {
         });
     });
 
-    it('should return a single restaurant', function() {
+    it('should return a single restaurant by id', function() {
       // strategy:
       //    1. Get a restaurant from db
       //    2. Prove you can retrieve it by id at `/restaurants/:id`

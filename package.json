@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha"
   },
   "keywords": [],
   "author": "",

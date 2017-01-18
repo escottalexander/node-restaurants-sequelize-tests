@@ -1,19 +1,19 @@
-const Sequelize = require('sequelize');
-const {DataTypes} = Sequelize;
-
 'use strict';
-module.exports = function(sequelize) {
-  var Grade = sequelize.define('Grade', {
+
+const Sequelize = require('sequelize');
+const {sequelize} = require('../db/sequelize');
+
+const Grade = sequelize.define('Grade', {
     grade: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
     inspectionDate: {
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       field: 'inspection_date',
       allowNull: false,
     },
-    score: DataTypes.INTEGER
+    score: Sequelize.INTEGER
   }, {
     tableName: 'grades',
     underscored: true,
@@ -32,6 +32,9 @@ module.exports = function(sequelize) {
         }
       }
     }
-  });
-  return Grade;
+  }
+);
+
+module.exports = {
+  Grade
 };

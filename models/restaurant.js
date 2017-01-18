@@ -1,19 +1,22 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Restaurant = sequelize.define('Restaurant', {
-    name: DataTypes.TEXT,
-    borough: DataTypes.ENUM('Brooklyn', 'Bronx', 'Manhattan', 'Queens', 'Staten Island'),
-    cuisine: DataTypes.TEXT,
+
+const Sequelize = require('sequelize');
+const {sequelize} = require('../db/sequelize');
+
+const Restaurant = sequelize.define('Restaurant', {
+    name: Sequelize.TEXT,
+    borough: Sequelize.ENUM('Brooklyn', 'Bronx', 'Manhattan', 'Queens', 'Staten Island'),
+    cuisine: Sequelize.TEXT,
     addressStreet: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       field: 'address_street'
     },
     addressBuildingNumber: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       field: 'address_building_number'
     },
     addressZipcode: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       field: 'address_zipcode'
     }
   }, {
@@ -53,6 +56,9 @@ module.exports = function(sequelize, DataTypes) {
         }
       }
     }
-  });
-  return Restaurant;
+  }
+);
+
+module.exports = {
+  Restaurant
 };

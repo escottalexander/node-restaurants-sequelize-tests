@@ -1,6 +1,6 @@
 const {PORT} = require('./config');
 const app = require('./app')
-const {sequelize} = require('./models');
+const {sequelize} = require('./db/sequelize');
 
 
 let server;
@@ -24,17 +24,14 @@ function closeServer() {
   return new Promise((resolve, reject) => {
     // not a promise yet, but will be soon?
     // https://github.com/sequelize/sequelize/pull/5776
-    try {
-      console.log('Closing server');
-      server.close();
-      console.log('Disconnecting from db');
-      sequelize.close();
+    sequelize.close();
+    console.log('Closing server');
+    server.close(err => {
+      if (err) {
+        return reject(err);
+      }
       resolve();
-    }
-    catch(err) {
-      sequelize.close();
-      reject(err);
-    }
+    });
   });
 }
 
@@ -46,4 +43,4 @@ if (require.main === module) {
     });
 };
 
-module.exports = {runServer, closeServer, app};
+module.exports = {runServer, closeServer};

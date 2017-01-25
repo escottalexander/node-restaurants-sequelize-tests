@@ -44,12 +44,14 @@ router.get('/:id', (req, res) => Restaurant.findById(req.params.id, {
 router.post('/', (req, res) => {
   // ensure we have required fields
   const requiredFields = ['name', 'borough', 'cuisine'];
-  requiredFields.forEach(field => {
-    // ensure that required fields have been sent over
-    if (! (field in req.body && req.body[field])) {
-        return res.status(400).json({message: `Must specify value for ${field}`});
-     }
-  });
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
   // `.create` creates a new instance and saves it to the db
   // in a single step.
   // http://docs.sequelizejs.com/en/latest/api/model/#createvalues-options-promiseinstance
@@ -120,7 +122,7 @@ router.get('/:id/grades', (req, res) => {
       // see notes in route for `/` above, for discussion of `include`
       // and eager loading.
       include: [{
-          model: Grade,
+          model: Grade,l
           // since we're setting `tableName` in our model definition for `Grade`,
           // we need to use `as` here with the same table name
           as: 'grades'

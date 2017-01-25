@@ -54,7 +54,7 @@ const Restaurant = sequelize.define('Restaurant', {
       mostRecentGrade: function() {
         // http://stackoverflow.com/a/4020842/1264950
         let mostRecent = null;
-        (this.getDataValue('grades') || []).forEach(grade => {
+        (this.grades || []).forEach(grade => {
           if (!mostRecent || grade.inspectionDate > mostRecent.inspectionDate) {
             mostRecent = grade;
           }

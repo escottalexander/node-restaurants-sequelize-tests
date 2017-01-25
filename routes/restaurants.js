@@ -122,7 +122,7 @@ router.get('/:id/grades', (req, res) => {
       // see notes in route for `/` above, for discussion of `include`
       // and eager loading.
       include: [{
-          model: Grade,l
+          model: Grade,
           // since we're setting `tableName` in our model definition for `Grade`,
           // we need to use `as` here with the same table name
           as: 'grades'

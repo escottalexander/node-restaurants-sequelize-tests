@@ -24,7 +24,6 @@ function closeServer() {
   return new Promise((resolve, reject) => {
     // not a promise yet, but will be soon?
     // https://github.com/sequelize/sequelize/pull/5776
-    sequelize.close();
     console.log('Closing server');
     server.close(err => {
       if (err) {

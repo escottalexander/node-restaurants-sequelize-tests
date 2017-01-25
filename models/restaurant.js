@@ -85,14 +85,14 @@ const Restaurant = sequelize.define('Restaurant', {
       // standard representation of this resource in our app.
       apiRepr: function() {
         return {
-          id: this.getDataValue('id'),
-          name: this.getDataValue('name'),
-          cuisine: this.getDataValue('cuisine'),
-          borough: this.getDataValue('borough'),
+          id: this.id,
+          name: this.name,
+          cuisine: this.cuisine,
+          borough: this.borough,
           address: {
-            number: this.getDataValue('addressBuildingNumber'),
-            street: this.getDataValue('addressStreet'),
-            zip: this.getDataValue('addressZipcode')
+            number: this.addressBuildingNumber,
+            street: this.addressStreet,
+            zip: this.addressZipcode
           },
           mostRecentGrade: this.mostRecentGrade ? this.mostRecentGrade.apiRepr() : null
         }

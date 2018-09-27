@@ -10,7 +10,8 @@ const DATABASE_URL = (
 const TEST_DATABASE_URL = (
   process.env.TEST_DATABASE_URL ||
   global.TEST_DATABASE_URL ||
-  'postgres://localhost/test-restaurants-app');
+  'postgres://seatzvnp:mog0ALGSefKX7KwKxevkn69PznMNqS4X@stampy.db.elephantsql.com:5432/seatzvnp'
+);
 
 module.exports = {
   PORT: process.env.PORT || '8080',
@@ -24,3 +25,5 @@ module.exports = {
 };
 
 //'postgres://localhost/dev-restaurants-app'
+
+//'postgres://localhost/test-restaurants-app'

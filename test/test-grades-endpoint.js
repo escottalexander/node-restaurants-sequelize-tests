@@ -95,32 +95,6 @@ describe('Grade API resource', function () {
 
   describe('GET endpoint', function () {
 
-    // it('should return all existing restaurants', function () {
-    //   // strategy:
-    //   //    1. get back all restaurants returned by by GET request to `/restaurants`
-    //   //    2. prove res has right status, data type
-    //   //    3. prove the number of restaurants we got back is equal to number
-    //   //       in db.
-    //   //
-    //   // need to have access to mutate and access `res` across
-    //   // `.then()` calls below, so declare it here so can modify in place
-    //   let res;
-
-    //   return chai.request(app)
-    //     .get('/restaurants')
-    //     .then(function (_res) {
-    //       // so subsequent .then blocks can access resp obj.
-    //       res = _res;
-    //       res.should.have.status(200);
-    //       // otherwise our db seeding didn't work
-    //       res.body.restaurants.should.have.length.of.at.least(1);
-    //       return Restaurant.count();
-    //     })
-    //     .then(function (count) {
-    //       res.body.restaurants.should.have.length.of(count);
-    //     });
-    // });
-
     it('should return a single grade by id', function () {
       // strategy:
       //    1. Get a grade from db
@@ -138,47 +112,6 @@ describe('Grade API resource', function () {
           res.body.id.should.equal(grade.id);
         })
     });
-
-    //   it('should return grades with right fields', function () {
-    //     // Strategy: Get back all restaurants, and ensure they have expected keys
-
-    //     let resRestaurant;
-    //     return chai.request(app)
-    //       .get('/restaurants')
-    //       .then(function (res) {
-    //         res.should.have.status(200);
-    //         res.should.be.json;
-    //         res.body.restaurants.should.be.a('array');
-    //         res.body.restaurants.should.have.length.of.at.least(1);
-
-    //         res.body.restaurants.forEach(function (restaurant) {
-    //           restaurant.should.be.a('object');
-    //           restaurant.should.include.keys(
-    //             'id', 'name', 'cuisine', 'borough', 'mostRecentGrade', 'address');
-    //         });
-    //         resRestaurant = res.body.restaurants[0];
-    //         return Restaurant.findById(resRestaurant.id, {
-    //           include: [{
-    //             model: Grade,
-    //             as: 'grades'
-    //           }]
-    //         });
-    //       })
-    //       .then(function (restaurant) {
-
-    //         resRestaurant.id.should.equal(restaurant.id);
-    //         resRestaurant.name.should.equal(restaurant.name);
-    //         resRestaurant.cuisine.should.equal(restaurant.cuisine);
-    //         resRestaurant.borough.should.equal(restaurant.borough);
-    //         resRestaurant.address.should.have.property('number', restaurant.addressBuildingNumber);
-    //         resRestaurant.address.should.have.property('street', restaurant.addressStreet);
-    //         resRestaurant.address.should.have.property('zip', restaurant.addressZipcode);
-    //         resRestaurant.mostRecentGrade.should.have.property('id', restaurant.mostRecentGrade.id);
-    //         resRestaurant.mostRecentGrade.should.have.property('grade', restaurant.mostRecentGrade.grade);
-    //         resRestaurant.mostRecentGrade.should.have.property('inspectionDate');
-    //         resRestaurant.mostRecentGrade.should.have.property('score', restaurant.mostRecentGrade.score);
-    //       });
-    //   });
   });
 
   describe('POST endpoint', function () {
@@ -278,33 +211,4 @@ describe('Grade API resource', function () {
         });
     });
   });
-
-  // describe('GET grades for a restaurant endpoint', function () {
-
-  //   it('should return all grades for a restaurant', function () {
-  //     // strategy:
-  //     //    1. get id of a restaurant
-  //     //    2. get back its grades from api
-  //     //    3. prove count and ids correct
-  //     let restaurant;
-
-  //     return Restaurant
-  //       .findOne({
-  //         include: [{
-  //           model: Grade,
-  //           as: 'grades'
-  //         }]
-  //       })
-  //       .then(_restaurant => {
-  //         restaurant = _restaurant;
-  //         return chai.request(app)
-  //           .get(`/restaurants/${restaurant.id}/grades`);
-  //       })
-  //       .then(function (res) {
-  //         // res.should.have.status(200);
-  //         res.body.grades.length.should.equal(restaurant.grades.length);
-  //         restaurant.grades.map(grade => grade.id).should.deep.equal(res.body.grades.map(grade => grade.id))
-  //       });
-  //   });
-  // });
 });

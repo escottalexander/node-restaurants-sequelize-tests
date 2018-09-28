@@ -4,13 +4,13 @@ const env = process.env.NODE_ENV || 'development'
 const DATABASE_URL = (
   process.env.DATABASE_URL ||
   global.DATABASE_URL ||
-  'postgres://xnogufvn:iC7U4JcOOeAXkKS4KiWjC0lbkG70PWZA@stampy.db.elephantsql.com:5432/xnogufvn'
+  'postgres://localhost/dev-restaurants-app'
 );
 
 const TEST_DATABASE_URL = (
   process.env.TEST_DATABASE_URL ||
   global.TEST_DATABASE_URL ||
-  'postgres://seatzvnp:mog0ALGSefKX7KwKxevkn69PznMNqS4X@stampy.db.elephantsql.com:5432/seatzvnp');
+  'postgres://localhost/test-restaurants-app');
 
 module.exports = {
   PORT: process.env.PORT || 8080,

@@ -1,22 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-  Grade
-} = require('../models');
+const {Grade} = require('../models');
 
+// requests for individual grades by id
+router.get('/:id', (req, res) => {
+  return Grade
+    // http://docs.sequelizejs.com/en/latest/api/model/#findbyidid-options-promiseinstance
+    .findById(req.params.id)
+    .then(grade => res.json(grade.apiRepr()));
+});
 
-router.get('/:id', (req, res) => Grade.findById(req.params.id, {
-
-  })
-  .then(grade => res.json(grade.apiRepr()))
-);
-
-// can create a new grade
+// create a grade
 router.post('/', (req, res) => {
-  // ensure we have required fields
-  const requiredFields = ['restaurant_id', 'grade', 'score', 'inspectionDate'];
-  for (let i = 0; i < requiredFields.length; i++) {
+  const requiredFields = ['grade', 'restaurantId'];
+  for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
       const message = `Missing \`${field}\` in request body`
@@ -24,36 +22,45 @@ router.post('/', (req, res) => {
       return res.status(400).send(message);
     }
   }
-
-  return Grade
-    .create({
-      restaurant_id: req.body.restaurant_id,
-      grade: req.body.grade,
-      score: req.body.score,
-      inspectionDate: req.body.inspectionDate,
-    })
-    .then(grade => res.status(201).json(grade.apiRepr()))
-    .catch(err => res.status(500).send({
-      message: err.message
-    }));
+  // `.create` creates a new instance and saves it to the db
+  // in a single step.
+  // http://docs.sequelizejs.com/en/latest/api/model/#createvalues-options-promiseinstance
+  return Grade.create({
+    // Unfortunately, even though we've set the `underscored` option
+    // on our model definition for Grade, we must refer to
+    // the restaurant id foreign key by its name in the db. Sequelize
+    // knows how to do that for `inspectionDate` but not `restaurant_id`,
+    // apparently because it's a foreign key.
+    restaurant_id: req.body.restaurantId,
+    grade: req.body.grade,
+    score: req.body.score,
+    inspectionDate: req.body.inspectionDate,
+  })
+  // if successful send a 201 and an object representing the newly
+  // created grade
+  .then(grade => {
+    return res.status(201).json(grade.apiRepr())
+  })
+  .catch(err => {
+    return res.status(500).send({message: err.message});
+  });
 });
 
-// update a grade
+// update an existing grade
 router.put('/:id', (req, res) => {
   // ensure that the id in the request path and the one in request body match
   if (!(req.params.id && req.body.id && req.params.id === req.body.id.toString())) {
     const message = (
       `Request path id (${req.params.id}) and request body id ` +
       `(${req.body.id}) must match`);
-    console.error(message);
-    res.status(400).json({
-      message: message
-    });
+    res.status(400).json({message: message});
   }
 
-
+  // we only support a subset of fields being updateable.
+  // if the user sent over any of the updatableFields, we udpate those values
+  // in document
   const toUpdate = {};
-  const updateableFields = ['restaurant_id', 'grade', 'score', 'inspectionDate'];
+  const updateableFields = ['score', 'grade', 'inspectionDate', 'restaurantId'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -62,32 +69,33 @@ router.put('/:id', (req, res) => {
   });
 
   return Grade
-    // all key/value pairs in toUpdate will be updated.
+    // http://docs.sequelizejs.com/en/latest/api/model/#updatevalues-options-promisearrayaffectedcount-affectedrows
     .update(toUpdate, {
-      // we only update grades that have the id we sent in.
+      // http://docs.sequelizejs.com/en/latest/docs/querying/#where
       where: {
         id: req.params.id
       }
     })
-    .then(() => res.status(204).end())
-    .catch(err => res.status(500).json({
-      message: 'Internal server error'
-    }));
+    .then(() => {
+      // send back status code 204 to indicate success but no content
+      res.status(204).end()
+    })
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
-// can delete a grade by id
+// delete a grade
 router.delete('/:id', (req, res) => {
   return Grade
+    // http://docs.sequelizejs.com/en/latest/api/model/#destroyoptions-promiseinteger
     .destroy({
+      // http://docs.sequelizejs.com/en/latest/docs/querying/#where
       where: {
         id: req.params.id
       }
     })
-    .then(grade => res.status(204).end())
-    .catch(err => res.status(500).json({
-      message: 'Internal server error'
-    }));
+    // send back status code 204 to indicate success but no content
+    .then(() => res.status(204).end())
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
-
 
 module.exports = router;

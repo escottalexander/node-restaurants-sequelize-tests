@@ -104,29 +104,50 @@ describe('Grades API resource', function() {
     // then prove that the restaurant we get back has
     // right keys, and that `id` is there (which means
     // the data was inserted into db)
-    it('should add a new grade', function() {
 
-      const newGradeData = generateGradeData();
-      let restaurant;
+    it('should add a new grade', function () {
+      const grades = ['A', 'B', 'C', 'D', 'F'];
+      const grade = grades[Math.floor(Math.random() * grades.length)];
+      const randNum = Math.floor(Math.random() * 10);
+      const newGradeData = {
+        inspectionDate: faker.date.past(),
+        grade: grade,
+        score: randNum
+      };
 
+      ///
       return Restaurant
         .findOne()
-        .then(_restaurant => {
-          restaurant = _restaurant;
-          newGradeData.restaurantId = restaurant.id
-          return chai.request(app).post('/grades').send(newGradeData)
+        .then(function (restaurant) {
+          newGradeData.restaurant_id = restaurant.id;
+          // make request then inspect it to make sure it reflects
+          // data we sent
+
+          ///
+          return chai.request(app)
+            .post('/grades')
+            .send(newGradeData)
         })
-        .then(function(res) {
+        .then(function (res) {
+
           res.should.have.status(201);
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.should.include.keys(
             'id', 'grade', 'score', 'inspectionDate');
-          res.body.grade.should.equal(newGradeData.grade);
 
+          // cause db should have created id on insertion
+          res.body.id.should.not.be.null;
           return Grade.findById(res.body.id);
         })
-        .then(function(grade) {
+        .catch(err => {
+          console.log(err);
+          res.status(500).send({
+            message: err.message
+          });
+        })
+        .then(function (grade) {
+
           grade.grade.should.equal(newGradeData.grade);
           grade.restaurant_id.should.equal(restaurant.id)
         });

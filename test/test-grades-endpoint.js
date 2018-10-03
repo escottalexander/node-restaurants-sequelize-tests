@@ -124,22 +124,39 @@ describe('Grade API resource', function () {
       const grade = grades[Math.floor(Math.random() * grades.length)];
       const randNum = Math.floor(Math.random() * 10);
       const newGradeData = {
-        restaurant_id: randNum,
         inspectionDate: faker.date.past(),
         grade: grade,
         score: randNum
       };
-      return chai.request(app).post('/grades').send(newGradeData)
+
+      ///
+      return Restaurant
+        .findOne()
+        .then(function (restaurant) {
+          newGradeData.restaurant_id = restaurant.id;
+          // make request then inspect it to make sure it reflects
+          // data we sent
+
+          ///
+          return chai.request(app)
+            .post('/grades')
+            .send(newGradeData)
+        })
         .then(function (res) {
-          console.log(res);
           res.should.have.status(201);
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.should.include.keys(
-            'id', 'grade', 'score', 'restaurant_id', 'inspectionDate');
+            'id', 'grade', 'score', 'inspectionDate');
           // cause db should have created id on insertion
           res.body.id.should.not.be.null;
           return Grade.findById(res.body.id);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).send({
+            message: err.message
+          });
         })
         .then(function (grade) {
           grade.grade.should.equal(newGradeData.grade);
